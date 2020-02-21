@@ -1,0 +1,40 @@
+version: "3.7"
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.3.0
+    ports:
+      - '31000:31000'
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      KAFKA_JMX_HOSTNAME: "127.0.0.1"
+      KAFKA_JMX_PORT: 31000
+      
+  kafka:
+    image: confluentinc/cp-enterprise-kafka:5.3.0
+    ports:
+      - '127.0.0.1:9092:9092'
+      - '31001:31001'
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://127.0.0.1:9092
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_LOG_RETENTION_MS: 15000
+      KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 25000
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 100
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka:29092
+      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_METRICS_ENABLE: 'false'
+      CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+      KAFKA_JMX_HOSTNAME: "localhost"
+      KAFKA_JMX_PORT: 31001
+      KAFKA_CREATE_TOPICS: |
+        clients.device.v1.proto:1:1

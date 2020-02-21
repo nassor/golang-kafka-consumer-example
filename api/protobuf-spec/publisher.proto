@@ -1,0 +1,11 @@
+syntax = "proto3";
+package pb;
+
+import "google/protobuf/timestamp.proto";
+
+message Device {
+    string id = 1;
+    string version = 2;
+    string reference = 3;
+    google.protobuf.Timestamp created_at = 3;
+}

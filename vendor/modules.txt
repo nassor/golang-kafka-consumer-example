@@ -1,0 +1,18 @@
+# github.com/confluentinc/confluent-kafka-go v1.3.0
+github.com/confluentinc/confluent-kafka-go/kafka
+# github.com/davecgh/go-spew v1.1.0
+github.com/davecgh/go-spew/spew
+# github.com/pmezard/go-difflib v1.0.0
+github.com/pmezard/go-difflib/difflib
+# github.com/rs/zerolog v1.18.0
+github.com/rs/zerolog
+github.com/rs/zerolog/internal/cbor
+github.com/rs/zerolog/internal/json
+github.com/rs/zerolog/log
+# github.com/stretchr/objx v0.1.0
+github.com/stretchr/objx
+# github.com/stretchr/testify v1.5.1
+github.com/stretchr/testify/assert
+github.com/stretchr/testify/mock
+# gopkg.in/yaml.v2 v2.2.2
+gopkg.in/yaml.v2
