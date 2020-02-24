@@ -20,8 +20,8 @@ func (m *MockKafkaConsumer) Poll(s int) kafka.Event {
 	return args.Get(0).(kafka.Event)
 }
 
-func (m *MockKafkaConsumer) CommitMessage(msg *kafka.Message) ([]kafka.TopicPartition, error) {
-	args := m.Called(msg)
+func (m *MockKafkaConsumer) StoreOffsets(offsets []kafka.TopicPartition) (storedOffsets []kafka.TopicPartition, err error) {
+	args := m.Called(offsets)
 	return args.Get(0).([]kafka.TopicPartition), args.Error(1)
 }
 
@@ -96,10 +96,11 @@ func TestKafkaSubscriber_commit(t *testing.T) {
 	for _, tt := range testTable {
 		t.Run(tt.name, func(t *testing.T) {
 			mkc := &MockKafkaConsumer{}
-			mkc.On("CommitMessage", mock.AnythingOfType("*kafka.Message")).
+			msg := kafka.Message{TopicPartition: kafka.TopicPartition{}}
+			mkc.On("StoreOffsets", []kafka.TopicPartition{msg.TopicPartition}).
 				Return([]kafka.TopicPartition{}, tt.commitError)
 			ks := NewKafkaSubscriber(mkc)
-			err := ks.commit(nil)
+			err := ks.commit(&msg)
 			assert.Equal(t, tt.commitError, err)
 		})
 	}

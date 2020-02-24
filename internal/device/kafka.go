@@ -10,7 +10,7 @@ import (
 
 type kafkaConsumer interface {
 	Poll(int) kafka.Event
-	CommitMessage(m *kafka.Message) ([]kafka.TopicPartition, error)
+	StoreOffsets(offsets []kafka.TopicPartition) (storedOffsets []kafka.TopicPartition, err error)
 }
 
 // KafkaSubscriber controls device information subscriptions
@@ -57,7 +57,7 @@ func (ks *KafkaSubscriber) subscribe() <-chan *kafka.Message {
 
 // commit acknowledge that the message received was correctly consumed
 func (ks *KafkaSubscriber) commit(m *kafka.Message) error {
-	if _, err := ks.kc.CommitMessage(m); err != nil {
+	if _, err := ks.kc.StoreOffsets([]kafka.TopicPartition{m.TopicPartition}); err != nil {
 		return err
 	}
 	return nil
