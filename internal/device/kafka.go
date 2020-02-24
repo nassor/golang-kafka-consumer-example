@@ -33,10 +33,11 @@ func NewKafkaSubscriber(kc kafkaConsumer) *KafkaSubscriber {
 func (ks *KafkaSubscriber) Start(ctx context.Context) {
 	log.Info().Msg("kafka device subscriber is listening for events...")
 
+RUNNING:
 	for {
 		select {
 		case <-ctx.Done():
-			continue
+			break RUNNING
 		default:
 			ev := ks.kc.Poll(ks.poolSize)
 			switch e := ev.(type) {
