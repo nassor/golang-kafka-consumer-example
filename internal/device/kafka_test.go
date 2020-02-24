@@ -34,8 +34,9 @@ func TestNewKafkaSubscriber(t *testing.T) {
 
 func TestKafkaSubscriber_Start(t *testing.T) {
 	testTable := []struct {
-		name  string
-		event kafka.Event
+		name             string
+		event            kafka.Event
+		contextCancelled bool
 	}{
 		{
 			name:  "receive kafka message correctly",
@@ -48,7 +49,8 @@ func TestKafkaSubscriber_Start(t *testing.T) {
 			event: kafka.Error{},
 		},
 		{
-			name: "start stop the context is cancelled",
+			name:             "start stop the context is cancelled",
+			contextCancelled: true,
 		},
 	}
 	for _, tt := range testTable {
@@ -70,6 +72,12 @@ func TestKafkaSubscriber_Start(t *testing.T) {
 			}
 
 			cancel()
+
+			if tt.contextCancelled {
+				assert.True(t, mkc.AssertNotCalled(t, "Poll"))
+				return
+			}
+			assert.True(t, mkc.AssertExpectations(t))
 		})
 	}
 }
