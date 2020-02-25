@@ -7,5 +7,7 @@ message Device {
     string id = 1;
     string version = 2;
     string reference = 3;
-    google.protobuf.Timestamp created_at = 3;
+    bool removed = 4;
+    bool disabled = 5;
+    google.protobuf.Timestamp created_at = 6;
 }
